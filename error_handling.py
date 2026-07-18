@@ -17,12 +17,18 @@ users = {
 
 @app.get("/users/{customer_id}")
 async def get_customer(customer_id:int):
-    if customer_id not in users:
+    try:
+        if customer_id not in users:
+            raise HTTPException(
+                status_code = 404,
+                detail = f"{customer_id} does not exist"
+            )
+    
+        return{
+            "res":users[customer_id]
+        }
+    except:
         raise HTTPException(
-            status_code = 404,
-            detail = f"{customer_id} does not exist"
+            status_code=500,
+            detail="Something went wrong from our side"
         )
-
-    return{
-        "res":users[customer_id]
-    }
